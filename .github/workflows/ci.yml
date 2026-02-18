@@ -1,0 +1,30 @@
+name: CI - Build & Test
+
+on:
+  pull_request:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 + Maven cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Build + Unit Tests (verify)
+        run: mvn --batch-mode --update-snapshots verify
+
+      - name: Upload built packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: maven-target
+          path: target/
+``
